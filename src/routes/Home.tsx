@@ -10,7 +10,7 @@ export default function Home(){
         </p>
       </div>
 
-      <Section title="Vấn đề & Cơ hội" subtitle="Những gì chúng ta đang giải quyết">
+      <Section title="Problems & Opportunities" subtitle="Những gì chúng ta đang giải quyết">
         <div className="grid md:grid-cols-2 gap-4">
           <div className="card p-4">
             <h3 className="font-semibold">Vấn đề</h3>
