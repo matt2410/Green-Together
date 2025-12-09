@@ -10,6 +10,7 @@ import Projects from './routes/Projects'
 import Team from './routes/Team'
 import Impact from './routes/Impact'
 import NotFound from './routes/NotFound'
+import EnvActionMap from './routes/EnvActionMap'
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       { index: true, element: <Home /> },
+      { path: "map", element: <EnvActionMap /> },
       { path: "goals", element: <Goals /> },
       { path: "timeline", element: <Timeline /> },
       { path: "projects", element: <Projects /> },
@@ -28,7 +30,5 @@ const router = createBrowserRouter([
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
     <RouterProvider router={router} />
-  </React.StrictMode>
 )

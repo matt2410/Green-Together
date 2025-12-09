@@ -14,6 +14,7 @@ export default function Navbar() {
         </Link>
         <nav className="ml-auto flex items-center gap-1">
           <NavLink to="/" end className={({isActive})=> `${navItem} ${isActive?active:idle}`}>Overview</NavLink>
+          <NavLink to="/map" className={({isActive})=> `${navItem} ${isActive?active:idle}`}>Map</NavLink>
           <NavLink to="/goals" className={({isActive})=> `${navItem} ${isActive?active:idle}`}>Goals</NavLink>
           <NavLink to="/timeline" className={({isActive})=> `${navItem} ${isActive?active:idle}`}>Timeline</NavLink>
           <NavLink to="/projects" className={({isActive})=> `${navItem} ${isActive?active:idle}`}>Projects</NavLink>
