@@ -1,5 +1,5 @@
 import { GoogleMap, HeatmapLayer, InfoWindow, useJsApiLoader } from "@react-google-maps/api";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AQLocation, Parameter, Sensor } from "../models/AQLocation";
 
 const DEFAULT_CENTER = { lat: 21.0278, lng: 105.8342 };
@@ -21,34 +21,119 @@ export default function EnvActionMap() {
   const [openAQPoints, setOpenAQPoints] = useState<any[]>([]);
   const [selected, setSelected] = useState<any>(null);
 
-  const [parameter, setParameter] = useState("pm25");          // selected filter
+  const [parameter, setParameter] = useState<Parameter>();          // selected filter
   const [availableParams, setAvailableParams] = useState<Parameter[]>([]); // list dynamic
 
-  const [lastActiveSensors, setLastActiveSensors] = useState<AQLocation[]>([]);
+  const [lastActiveLocations, setLastActiveLocations] = useState<AQLocation[]>([]);
+  const [mapData, setMapData] = useState<any[]>([]);
+  const markerRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
 
   // ====================  GET AVAILABLE PARAMETERS (Vietnam) ====================
   // LOAD PARAMETERS + SENSOR LIST
   useEffect(() => {
-    loadData();
+    loadBaseData();
   }, []);
 
-  async function loadData() {
+  async function loadBaseData() {
     const params = await getAvailableParameters();
     setAvailableParams(params);
-    if (!params.find(p => p.name === parameter)) setParameter(params[0].name);
+    if (params.length > 0) {
+      setParameter(params[0]);
+    }
 
+    // load sensors active
     const sensors = await getSensorsVN();
-    setLastActiveSensors(sensors);
-    const measurement = await getDailyMeasurements(11357396)
-    console.log('measurement', measurement);
-    
+    setLastActiveLocations(sensors);
   }
+
+  useEffect(() => {
+    loadFilterData();
+  }, [lastActiveLocations, parameter]);
+
+  async function loadFilterData() {
+    if (lastActiveLocations.length === 0 || !parameter) return;
+
+    console.log('lastActiveSensors = ', lastActiveLocations);
+    let activeSensors: Sensor[] = []
+
+    lastActiveLocations.map(async (location) => {
+      activeSensors = activeSensors.concat(location.sensors.filter((sensor: Sensor) => sensor.parameter.id === parameter.id).map((s: Sensor) => ({
+        ...s,
+        coordinates: {
+          latitude: location.coordinates.latitude,
+          longitude: location.coordinates.longitude
+        }
+      })));
+    });
+    console.log('activeSensors = ', activeSensors);
+
+    // **LOOP LẤY DAILY DATA CHO MỖI SENSOR**
+    const dailyData = await Promise.all(
+      activeSensors.map(async (s: Sensor) => {
+        try {
+          const measurement = await getDailyMeasurements(s.id);
+          return measurement.length === 0 ? null : {
+            location: { lat: s.coordinates.latitude, lng: s.coordinates.longitude },
+            value: measurement[0].value
+          };
+
+        } catch (e) {
+          console.warn("Sensor lỗi:", s.id);
+          return null;
+        }
+      })
+    );
+
+    setMapData(dailyData.filter(Boolean));
+  }
+
+  useEffect(() => {
+    // ❗ Clear marker cũ
+    markerRef.current.forEach(m => (m.map = null));
+    markerRef.current = [];
+
+    if (!map || mapData.length === 0) return;
+
+    const renderMarkers = async () => {
+      const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+      // ➤ Tạo mới
+      mapData.forEach(p => {
+        const el = document.createElement("div");
+        el.style.width = "42px";
+        el.style.height = "42px";
+        el.style.borderRadius = "50%";
+        el.style.display = "flex";
+        el.style.justifyContent = "center";
+        el.style.alignItems = "center";
+        el.style.fontWeight = "600";
+        el.style.color = "#fff";
+
+        // Color by value
+        el.style.background =
+          p.value < 50 ? "#4CAF50" :
+            p.value < 100 ? "#FFC107" :
+              "#F44336";
+
+        el.innerText = Math.round(p.value).toString();
+
+        const marker = new AdvancedMarkerElement({
+          map,
+          position: p.location,
+          content: el
+        });
+
+        markerRef.current.push(marker);  // ⭐ Lưu để clear được
+      });
+    };
+
+    renderMarkers();
+  }, [map, mapData]);
 
   // SEARCH BUTTON
   async function searchArea() {
     if (!bounds) return;
     setLoading(true);
-    const aq = await fetchOpenAQLive(bounds, parameter);
+    const aq = await fetchOpenAQLive(bounds, parameter?.name || "");
     setOpenAQPoints(aq);
     setMessage(`📡 Loaded OpenAQ ${aq.length}`);
     setLoading(false);
@@ -104,8 +189,8 @@ export default function EnvActionMap() {
         <h2 className="text-xl font-semibold flex-1">🌍 ENV REALTIME AIR QUALITY MAP</h2>
 
         {/* === UPDATED DROPDOWN: dynamic filter === */}
-        <select className="border px-2 py-1 rounded" value={parameter}
-          onChange={(e) => setParameter(e.target.value)}>
+        <select className="border px-2 py-1 rounded" value={parameter?.name}
+          onChange={(e) => setParameter(availableParams.find(p => p.name === e.target.value)!)}>
           {availableParams.map(p => (
             <option key={p.id} value={p.name}>{p.name.toUpperCase()} ({p.units})</option>
           ))}
@@ -120,6 +205,7 @@ export default function EnvActionMap() {
       {/* GOOGLE MAP */}
       <div className="h-[70vh] border rounded relative overflow-hidden">
         <GoogleMap
+          options={{ mapId: "e97011c09c61162c325d8470" }}
           onLoad={onLoad}
           onIdle={onIdle}
           zoom={DEFAULT_ZOOM}
@@ -129,14 +215,12 @@ export default function EnvActionMap() {
           {heatmapData.length > 0 && <HeatmapLayer data={heatmapData} options={heatmapOptions} />}
 
           {selected && (
-            <InfoWindow position={{ lat: selected.lat, lng: selected.lng }} onCloseClick={() => setSelected(null)}>
-              <div className="text-[13px]">
-                <b>{selected.name}</b>
-                <div className="mt-1">
-                  {selected.values?.map((v: any) => (
-                    <div key={v.parameter}>{v.parameter.toUpperCase()}: {v.value} {v.unit}</div>
-                  ))}
-                </div>
+            <InfoWindow
+              position={{ lat: selected.lat, lng: selected.lng }}
+              onCloseClick={() => setSelected(null)}
+            >
+              <div>
+                <b>AQI Value:</b> {selected.value}
               </div>
             </InfoWindow>
           )}
@@ -144,7 +228,7 @@ export default function EnvActionMap() {
 
         {/* LEGEND */}
         <div className="absolute right-3 bottom-3 bg-white shadow-md p-2 rounded text-[12px]">
-          <b>AQI {parameter.toUpperCase()}</b>
+          <b>AQI {parameter?.name.toUpperCase()}</b>
           <div className="flex w-40 h-3 rounded mt-1"
             style={{ background: "linear-gradient(to right, blue, cyan, lightgreen, yellow, orange, orangered, red)" }}>
           </div>

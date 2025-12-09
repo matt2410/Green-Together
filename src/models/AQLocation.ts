@@ -9,6 +9,10 @@ export interface Sensor {
   id: number;
   name: string;
   parameter: Parameter;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  }
 }
 
 export interface AQLocation {
