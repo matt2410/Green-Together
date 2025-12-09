@@ -25,11 +25,11 @@ export async function getSensorsVN() {
   });
   const data = await res.json();
 
-  // lọc sensor hoạt động trong vòng 1h
+  // lọc sensor hoạt động trong vòng 24h
   return data?.results?.filter((item: any) => {
     if (!item.datetimeLast?.local) return false;
     const last = new Date(item.datetimeLast.local);
-    return ((Date.now() - last.getTime()) / (1000 * 60 * 60)) <= 1;
+    return ((Date.now() - last.getTime()) / (1000 * 60 * 60)) <= 24;
   }) ?? [];
 }
 
