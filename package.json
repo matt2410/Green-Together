@@ -4,22 +4,20 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
     "@googlemaps/markerclusterer": "^2.6.2",
     "@react-google-maps/api": "^2.20.7",
-    "leaflet": "1.7.1",
+    "next": "^16.0.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-leaflet": "3.2.5",
-    "react-leaflet-cluster": "^4.0.0",
     "react-router-dom": "^6.26.0"
   },
   "devDependencies": {
-    "@types/leaflet": "^1.7.9",
+    "@types/node": "24.10.2",
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

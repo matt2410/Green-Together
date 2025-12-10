@@ -1,4 +1,6 @@
-import Section from "../components/Section"
+"use client" // cần nếu trang có interactivity
+
+import Section from "@/components/Section"   // đã đổi alias đúng Next.js
 
 const sample = [
   { title: "Increase community participation", metric: "2,000 active volunteers", due: "Q4 2025" },
@@ -9,16 +11,19 @@ const sample = [
 
 export default function Goals(){
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <Section title="Goals & KPIs" subtitle="Replace with goals from Notion">
         <ul className="space-y-3">
           {sample.map((g)=> (
-            <li key={g.title} className="card p-4 flex items-center justify-between gap-4">
+            <li key={g.title} className="card p-4 flex justify-between items-center gap-4">
               <div>
                 <p className="font-medium">{g.title}</p>
                 <p className="text-gray-600 text-sm">{g.metric}</p>
               </div>
-              <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs">{g.due}</span>
+
+              <span className="px-3 py-1 text-xs rounded-full bg-emerald-100 text-emerald-700">
+                {g.due}
+              </span>
             </li>
           ))}
         </ul>
