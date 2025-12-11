@@ -1,4 +1,3 @@
-//src/app/api/[...path]/route.ts
 import { NextResponse } from "next/server";
 
 const API = process.env.OPENAQ_API_KEY ?? "";
@@ -11,7 +10,7 @@ function getHeaders() {
 }
 
 export async function GET(req: Request, ctx: { params: Promise<{ path?: string[] }> }) {
-  const { path } = await ctx.params;   // 🔥 MUST AWAIT
+  const { path } = await ctx.params;
 
   if (!path || path.length === 0) {
     return NextResponse.json(
@@ -27,12 +26,18 @@ export async function GET(req: Request, ctx: { params: Promise<{ path?: string[]
 
   const url = `https://api.openaq.org/v3/${forwardPath}${queryString}`;
 
-  console.log("Proxying ->", url);
-
   const res = await fetch(url, {
     headers: getHeaders(),
     cache: "no-store",
   });
+
+  if (!res.ok) {
+    const text = await res.text();
+    return NextResponse.json(
+      { error: `OpenAQ returned ${res.status}`, details: text },
+      { status: res.status }
+    );
+  }
 
   const data = await res.json();
 

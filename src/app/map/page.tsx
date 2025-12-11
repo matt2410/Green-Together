@@ -125,6 +125,9 @@ export default function EnvActionMap() {
         zoom={DEFAULT_ZOOM}
         center={DEFAULT_CENTER}
         mapContainerStyle={{ width: "100%", height: "70vh" }}
+        options={{
+          mapId: process.env.NEXT_MAP_ID,
+        }}
       >
         {heatmap.length > 0 && <HeatmapLayer data={heatmap} />}
       </GoogleMap>
