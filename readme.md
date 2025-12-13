@@ -1,25 +1,9 @@
-# GreenTogether (React + Vite + Tailwind)
+OPENAQ_API_KEY=b3ea85c310d8fbcd476a3ce7bb92c89665fc1bfb829b6f9ee7ab30fb08f19d46
+GOOGLE_CLIENT_ID=73980851050-rronuvfgmmq60nsdf3bf46704ah7jmud.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+NEXTAUTH_SECRET=htEAdUB1IC/yAP2OIGHbjqGPprsWFnjFaK0VjY1fKPE=
+NEXTAUTH_URL=http://localhost:3000
+MONGODB_URI=mongodb+srv://landstock_valuation_uat_read_write:6RKVIHqLC0wEFfAw@lab-uat.ojso0.mongodb.net/landstock_valuation_uat?authSource=admin&retryWrites=true&w=majority
 
-GreenTogether là một nền tảng tuyên truyền, giáo dục và kết nối cộng đồng cùng hành động vì môi trường, với trọng tâm là các địa điểm cần bảo vệ hoặc đang diễn ra các chiến dịch môi trường trên toàn Việt Nam.
-
-## Mô tả ngắn
-Nền tảng hướng đến xây dựng một cộng đồng số thúc đẩy hành động thiết thực: tăng nhận thức, kết nối người dân và tổ chức, cung cấp thông tin trực quan về điểm nóng môi trường, và khuyến khích tham gia các chiến dịch vệ sinh, trồng cây, giáo dục.
-
-## Các chức năng chính (có trong roadmap)
-- Bản đồ hành động môi trường (hiển thị điểm ô nhiễm, các hoạt động, bộ lọc).
-- Đăng ký tham gia hoạt động và theo dõi hành trình cá nhân.
-- Kho nội dung truyền thông: bài viết, infographic, video, câu chuyện truyền cảm hứng.
-- Góp ý và đóng góp từ cộng đồng (gửi địa điểm, bình luận, đánh giá).
-- Hệ thống chứng nhận: huy hiệu, bảng xếp hạng, chứng chỉ điện tử.
-
-## Quick start
-```bash
-npm install
-npm run dev
-```
-
-## Hướng dẫn mở rộng
-- Thêm map: cài `react-leaflet` hoặc `mapbox-gl` và tạo trang Map/Projects hiển thị điểm nóng lấy dữ liệu từ API.
-- Sự kiện & đăng ký: tạo backend đơn giản (Express/Fastify/Nest) để lưu sự kiện và đăng ký người tham gia.
-- Auth: tích hợp OAuth (Google/Facebook) hoặc email/password để quản lý người dùng và huy hiệu.
-- Nội dung từ Notion: export Markdown từ Notion và paste vào `src/routes/*` hoặc tạo script import tự động.
+NEXT_PUBLIC_GOOGLE_MAP_KEY=AIzaSyBsqeLbj5PY8F2w4Nt8S2a4cpWDiVjsaDA
+NEXT_PUBLIC_MAP_ID=e97011c09c61162c325d8470

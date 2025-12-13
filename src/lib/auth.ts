@@ -4,50 +4,54 @@ import { connectDB } from "@/lib/mongodb"
 import { User } from "@/models/User"
 
 export const authOptions: NextAuthOptions = {
-  providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-  ],
+    providers: [
+        Google({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        }),
+    ],
 
-  session: {
-    strategy: "jwt",
-  },
-
-  callbacks: {
-    async signIn({ user }) {
-      await connectDB()
-
-      const existing = await User.findOne({ email: user.email })
-
-      if (!existing) {
-        await User.create({
-          email: user.email,
-          name: user.name,
-          image: user.image,
-        })
-      }
-
-      return true
+    session: {
+        strategy: "jwt",
     },
 
-    async jwt({ token }) {
-      await connectDB()
-      const dbUser = await User.findOne({ email: token.email })
+    callbacks: {
+        async signIn({ user }) {
+            await connectDB()
 
-      if (dbUser) {
-        token.id = dbUser._id.toString()
-        token.phone = dbUser.phone
-      }
+            const existing = await User.findOne({ email: user.email })
 
-      return token
+            if (!existing) {
+                await User.create({
+                    email: user.email,
+                    name: user.name,
+                    image: user.image,
+                })
+            }
+
+            return true
+        },
+
+        async jwt({ token }) {
+            const dbUser = await User.findOne({ email: token.email })
+
+            if (dbUser) {
+                token.id = dbUser._id.toString()
+                token.phone = dbUser.phone
+                token.gender = dbUser.gender
+                token.dob = dbUser.dob
+            }
+
+            return token
+        },
+
+        async session({ session, token }) {
+            session.user.id = token.id as string
+            session.user.phone = token.phone as string
+            session.user.gender = token.gender as any
+            session.user.dob = token.dob as string
+            return session
+        }
+
     },
-
-    async session({ session, token }) {
-      session.user.id = token.id as string
-      session.user.phone = token.phone as string
-      return session
-    },
-  },
 }
