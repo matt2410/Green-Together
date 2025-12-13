@@ -1,5 +1,6 @@
 "use client"
 
+import { UserModel } from "@/data/users"
 import { signIn, signOut, useSession } from "next-auth/react"
 import { useRouter, usePathname } from "next/navigation"
 import { useEffect } from "react"
@@ -7,10 +8,11 @@ import { useEffect } from "react"
 export default function LoginButton() {
   const { data: session, status } = useSession()
   const router = useRouter()
-  const pathname = usePathname() // Lấy path hiện tại
+  const pathname = usePathname()
+  const userSession = session?.user as UserModel
 
   useEffect(() => {
-    if (status === "authenticated" && !session?.user?.phone) {
+    if (status === "authenticated" && !userSession.phone) {
       router.push("/user")
     }
   }, [status, session, router, pathname])

@@ -78,7 +78,7 @@ export default function EnvActionMap() {
           const el = document.createElement("div")
           el.className = "w-10 h-10 flex items-center justify-center rounded-full font-semibold text-white"
           el.style.background = p.value < 50 ? "#4CAF50" : p.value < 100 ? "#FFC107" : "#F44336"
-          el.innerText = Math.round(p.value)
+          el.innerText = `${Math.round(p.value)}`
 
           const marker = new AdvancedMarkerElement({ map, position: p.location, content: el })
           markerRef.current.push(marker)
@@ -94,11 +94,21 @@ export default function EnvActionMap() {
     setLoading(false)
   }
 
-  const heatmap = useMemo(() => openAQPoints.map(p => {
-    const v = p.values?.find(x => x.parameter === parameter?.name)
-    if (!v) return null
-    return { location: new google.maps.LatLng(p.lat, p.lng), weight: Math.min(v.value / 15, 6) }
-  }).filter(Boolean), [openAQPoints, parameter])
+  const heatmap = useMemo<google.maps.visualization.WeightedLocation[]>(() => {
+  return openAQPoints
+    .map((p): google.maps.visualization.WeightedLocation | null => {
+      const v = p.values?.find((x: any) => x.parameter === parameter?.name);
+      if (!v) return null;
+
+      return {
+        location: new google.maps.LatLng(p.lat, p.lng),
+        weight: Math.min(v.value / 15, 6),
+      };
+    })
+    .filter(
+      (p): p is google.maps.visualization.WeightedLocation => p !== null
+    );
+}, [openAQPoints, parameter]);
 
   if (!isLoaded) return <>Loading Map...</>
 

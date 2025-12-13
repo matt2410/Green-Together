@@ -3,5 +3,6 @@
 /dist
 *.lock
 .env
+.env.local
 .env.lock
 .next
