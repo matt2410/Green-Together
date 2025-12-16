@@ -1,9 +1,14 @@
 import EventImageSlider from "@/components/EventImageSlider";
 import { getEventById } from "@/lib/getEventById";
 import { notFound } from "next/navigation";
-import { Props } from "next/script";
 
-export default async function EventDetailPage({ params }: Props) {
+interface EventDetailPageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default async function EventDetailPage({ params }: EventDetailPageProps) {
   const { id } = await params;
   const event = await getEventById(id);
   if (!event) return notFound();
