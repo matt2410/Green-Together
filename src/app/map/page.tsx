@@ -115,7 +115,7 @@ export default function EnvActionMap() {
   return (
     <div className="p-4">
       <div className="flex gap-3 mb-3 items-center">
-        <h2 className="text-xl font-semibold flex-1">🌍 ENV AIR QUALITY MAP</h2>
+        <h2 className="text-xl font-semibold flex-1">🌍 Bản đồ ô nhiễm</h2>
 
         <select className="border px-2 py-1 rounded" value={parameter?.name}
           onChange={e => setParameter(availableParams.find(p => p.name === e.target.value)!)}>
