@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { connectDB } from "@/lib/mongodb"
 import { EventModel } from "@/models/Event"
 
+export const revalidate = 300 // ⏱ cache 5 phút (ISR)
+
 export async function GET(req: Request) {
   try {
     await connectDB()
@@ -16,8 +18,8 @@ export async function GET(req: Request) {
       ? {
           $or: [
             { title: { $regex: q, $options: "i" } },
-            { location: { $regex: q, $options: "i" } }
-          ]
+            { location: { $regex: q, $options: "i" } },
+          ],
         }
       : {}
 
@@ -27,17 +29,25 @@ export async function GET(req: Request) {
         .skip(skip)
         .limit(limit)
         .lean(),
-      EventModel.countDocuments(filter)
+      EventModel.countDocuments(filter),
     ])
 
-    return NextResponse.json({
-      data: events,
-      pagination: {
-        page,
-        limit,
-        total
+    return NextResponse.json(
+      {
+        data: events,
+        pagination: {
+          page,
+          limit,
+          total,
+        },
+      },
+      {
+        headers: {
+          // 🔥 HTTP cache (CDN + browser)
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+        },
       }
-    })
+    )
   } catch (err: any) {
     console.error("[GET /api/events]", err.message)
     return NextResponse.json(

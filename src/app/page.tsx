@@ -1,9 +1,14 @@
+"use client"
+
 import Section from "@/components/Section"
+import { useRouter } from "next/navigation"
 
 export default function Home() {
+    const router = useRouter()
+
     return (
         <div className="space-y-6">
-            
+
             <div className="card p-8 bg-gradient-to-br from-brand/10 to-emerald-50">
                 <h1 className="text-2xl sm:text-3xl font-bold">GreenTogether — Chung tay vì một Việt Nam xanh</h1>
                 <p className="text-gray-700 mt-2">
@@ -34,15 +39,24 @@ export default function Home() {
 
             <Section title="Giải pháp & Tính năng chính" subtitle="Sản phẩm của chúng ta">
                 <div className="grid md:grid-cols-2 gap-4">
-                    <div className="card p-4 space-y-3">
+                    <div className="card p-4 space-y-3 cursor-pointer"
+                        onClick={() => {
+                            router.push(`/map`)
+                        }}>
                         <h4 className="font-semibold">🗺️ Bản đồ hành động môi trường</h4>
                         <p className="text-gray-600 text-sm">Hiển thị địa điểm ô nhiễm và các hoạt động (trồng cây, dọn rác...). Có bộ lọc khu vực, loại vấn đề, thời gian, loại chiến dịch.</p>
                     </div>
-                    <div className="card p-4 space-y-3">
+                    <div className="card p-4 space-y-3 cursor-pointer"
+                        onClick={() => {
+                            router.push(`/events`)
+                        }}>
                         <h4 className="font-semibold">✍️ Đăng ký tham gia hoạt động</h4>
                         <p className="text-gray-600 text-sm">Người dùng đăng ký sự kiện, theo dõi hành trình tham gia và lưu lại đóng góp cá nhân.</p>
                     </div>
-                    <div className="card p-4 space-y-3">
+                    <div className="card p-4 space-y-3 cursor-pointer"
+                        onClick={() => {
+                            router.push(`/campaigns`)
+                        }}>
                         <h4 className="font-semibold">📚 Kho nội dung truyền thông</h4>
                         <p className="text-gray-600 text-sm">Bài viết, infographic, video, câu chuyện truyền cảm hứng, và chiến dịch đã/đang triển khai.</p>
                     </div>
@@ -57,14 +71,6 @@ export default function Home() {
                 </div>
             </Section>
 
-            <Section title="Tiếp theo" subtitle="Bạn có thể làm gì với template này?">
-                <ol className="list-decimal list-inside text-gray-600 space-y-2">
-                    <li>Thêm module bản đồ (ví dụ: React Leaflet hoặc Mapbox) trong trang Projects/Map để hiển thị điểm nóng.</li>
-                    <li>Tích hợp form đăng ký sự kiện và backend (REST/GraphQL) để lưu đăng ký.</li>
-                    <li>Đưa nội dung thực từ Notion vào các trang Projects & Impact.</li>
-                    <li>Thêm hệ thống người dùng (Auth) để quản lý huy hiệu và theo dõi đóng góp.</li>
-                </ol>
-            </Section>
         </div>
     )
 }
