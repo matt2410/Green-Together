@@ -73,6 +73,7 @@ export async function POST(
       message: "Tham gia thành công",
       addedPoints: 10,
       totalPoints: user.totalPoints,
+      joinedEvents: user.joinedEvents.map((id: string) => id.toString()),
     })
   } catch (err) {
     console.error("[POST /api/events/:id/join]", err)

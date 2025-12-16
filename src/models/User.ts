@@ -1,4 +1,4 @@
-import mongoose, { Schema, models, model } from "mongoose"
+import { Schema, models, model } from "mongoose"
 
 const UserSchema = new Schema(
   {
@@ -17,19 +17,16 @@ const UserSchema = new Schema(
 
     phone: {
       type: String,
-      required: true,
       match: /^09\d{8}$/,
     },
 
     gender: {
       type: String,
       enum: ["male", "female", "other"],
-      required: true,
     },
 
     dob: {
       type: String, // yyyy-mm-dd
-      required: true,
     },
 
     /* ===== GHI NHẬN & ĐÓNG GÓP ===== */
@@ -57,12 +54,14 @@ const UserSchema = new Schema(
 
     lastActiveAt: Date,
 
-    joinedEvents: [
-      { type: Schema.Types.ObjectId, ref: "Event", default: [], }
-    ],
+    joinedEvents: {
+      type: [Schema.Types.ObjectId],
+      ref: "Event",
+      default: [],
+    },
   },
-  {
-    timestamps: true,
+{
+  timestamps: true,
     collection: "users",
   }
 )

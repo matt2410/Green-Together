@@ -1,6 +1,6 @@
 import Google from "next-auth/providers/google"
-import { connectDB } from "./mongodb"
 import { NextAuthOptions } from "next-auth"
+import { connectDB } from "@/lib/mongodb"
 import { User } from "@/models/User"
 
 export const authOptions: NextAuthOptions = {
@@ -18,32 +18,48 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user }) {
       await connectDB()
+
+      const existingUser = await User.findOne({ email: user.email })
+
+      if (!existingUser) {
+        await User.create({
+          email: user.email,
+          name: user.name || "Unnamed",
+          image: user.image,
+        })
+      }
+
       return true
     },
 
-    async jwt({ token }) {
+    async jwt({ token, trigger, session }) {
       await connectDB()
 
-      const dbUser = await User.findOne({ email: token.email })
+      // 🔥 INIT JWT (login / refresh)
+      if (!token.user && token.email) {
+        const dbUser = await User.findOne({ email: token.email }).lean()
+        if (dbUser) {
+          token.user = {
+            ...dbUser,
+            _id: dbUser._id.toString(),
+          }
+        }
+      }
 
-      if (dbUser) {
-        token.id = dbUser._id.toString()
-        token.phone = dbUser.phone
-        token.gender = dbUser.gender
-        token.dob = dbUser.dob
-      } else {
-        token.id = ''
+      // 🔥 useSession().update()
+      if (trigger === "update" && session?.user) {
+        token.user = Object.assign(
+          {},
+          token.user ?? {},
+          session.user
+        )
       }
 
       return token
     },
 
     async session({ session, token }) {
-      session.user.id = token.id as any
-      session.user.phone = token.phone as any
-      session.user.gender = token.gender as any
-      session.user.dob = token.dob as any
-
+      session.user = token.user as any
       return session
     },
   },

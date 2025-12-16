@@ -1,16 +1,16 @@
 "use client"
 
-import { UserModel } from "@/data/users"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { UserModel } from "@/data/users"
 
 export default function User() {
     const { data: session, status, update } = useSession()
     const router = useRouter()
 
-    const user = session?.user as UserModel
+    const user = session?.user as any
 
     const [formData, setFormData] = useState<UserModel>({
         name: "",
@@ -76,13 +76,19 @@ export default function User() {
             return
         }
 
-        // 🔥 refresh JWT + session
-        await update()
+        await await update({
+            user: {
+                phone: formData.phone,
+                gender: formData.gender,
+                dob: formData.dob,
+            },
+        })
+
         setSaved(true)
 
         setTimeout(() => {
             router.replace("/")
-        }, 800)
+        }, 1500)
     }
 
     if (status === "loading") return null

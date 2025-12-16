@@ -12,7 +12,7 @@ export default function LoginButton() {
   const userSession = session?.user as UserModel
 
   useEffect(() => {
-    if (status === "authenticated" && !userSession.phone) {
+    if (status === "authenticated" && !userSession.email) {
       router.push("/user")
     }
   }, [status, session, router, pathname])

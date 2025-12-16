@@ -11,3 +11,9 @@ export function getBaseUrl() {
   if (typeof window !== "undefined") return ""; // client
   return process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 }
+
+export function optimizeUnsplash(url: string, width = 800) {
+  if (!url.includes("images.unsplash.com")) return url
+
+  return `${url}?auto=format&fit=crop&w=${width}&q=70`
+}

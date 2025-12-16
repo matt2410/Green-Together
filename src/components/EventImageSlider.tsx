@@ -1,5 +1,6 @@
 "use client";
 
+import { optimizeUnsplash } from "@/lib/utils";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -20,7 +21,7 @@ export default function EventImageSlider({ images }: Props) {
   return (
     <div className="relative w-full h-64 rounded overflow-hidden">
       <Image
-        src={images[index]}
+        src={optimizeUnsplash(images[index])}
         alt={`event-image-${index}`}
         fill
         className="object-cover"

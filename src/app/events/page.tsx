@@ -4,10 +4,14 @@ import Link from "next/link"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { Event } from "@/types/event"
+import { optimizeUnsplash } from "@/lib/utils"
+import { useSession } from "next-auth/react"
 
 export default function EventsPage() {
+  const { data: session } = useSession()
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
+  const joinedEventIds = (session?.user as any)?.joinedEvents ?? [] as string[]
 
   useEffect(() => {
     fetch("/api/events", { cache: "force-cache" })
@@ -27,11 +31,12 @@ export default function EventsPage() {
       <h1 className="text-3xl font-bold mb-10">Hoạt động & Sự kiện</h1>
 
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {events.map((event) => {
+        {events.map((event: any) => {
           const start = new Date(event.startDate)
           const end = new Date(event.endDate)
           const isOngoing = start <= now && now <= end
-          const thumbnail = event.images?.[0]
+          const thumbnail = optimizeUnsplash(event.images?.[0])
+          const isJoined = joinedEventIds.includes(event._id)
 
           return (
             <Link
@@ -54,12 +59,16 @@ export default function EventsPage() {
                 )}
 
                 <span
-                  className={`absolute top-4 left-4 px-3 py-1 text-xs rounded-full text-white ${
-                    isOngoing ? "bg-green-600" : "bg-gray-500"
-                  }`}
+                  className={`absolute top-4 left-4 px-3 py-1 text-xs rounded-full text-white ${isOngoing ? "bg-green-600" : "bg-gray-500"
+                    }`}
                 >
                   {isOngoing ? "Đang diễn ra" : "Đã kết thúc"}
                 </span>
+                {isJoined && (
+                  <span className="absolute top-4 right-4 px-3 py-1 text-xs rounded-full bg-blue-600 text-white">
+                    ✔ Đã tham gia
+                  </span>
+                )}
               </div>
 
               {/* CONTENT */}

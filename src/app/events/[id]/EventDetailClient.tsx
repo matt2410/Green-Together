@@ -1,17 +1,21 @@
 "use client"
 
 import EventImageSlider from "@/components/EventImageSlider"
+import { useSession } from "next-auth/react"
 import { useState } from "react"
 import { toast } from "sonner"
 
 export default function EventDetailClient({ event }: { event: any }) {
   const [loading, setLoading] = useState(false)
   const [joined, setJoined] = useState(false)
+  const { update, data: session } = useSession()
 
   const start = new Date(event.startDate)
   const end = new Date(event.endDate)
   const now = new Date()
   const isOngoing = start <= now && now <= end
+  const joinedEventIds = (session?.user as any)?.joinedEvents ?? [] as string[]
+  const isJoined = joinedEventIds.includes(event._id)
 
   async function handleJoin() {
     try {
@@ -30,7 +34,11 @@ export default function EventDetailClient({ event }: { event: any }) {
 
       setJoined(true)
       toast.success(`🎉 Bạn được +${data.addedPoints} điểm`)
-
+      await update({
+        user: {
+          joinedEvents: data.joinedEvents,
+        },
+      })
     } finally {
       setLoading(false)
     }
@@ -54,7 +62,11 @@ export default function EventDetailClient({ event }: { event: any }) {
           </span>
         </div>
 
-        <button
+        {isJoined ? (
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-600 text-white text-sm font-semibold">
+            ✔ Đã tham gia
+          </span>
+        ) : <button
           disabled={!isOngoing || joined || loading}
           onClick={handleJoin}
           className={`px-6 py-3 rounded-xl text-white font-medium transition ${isOngoing && !joined
@@ -63,7 +75,8 @@ export default function EventDetailClient({ event }: { event: any }) {
             }`}
         >
           {joined ? "Đã tham gia ✔" : loading ? "Đang xử lý..." : "Đăng ký tham gia"}
-        </button>
+        </button>}
+
       </section>
 
       {/* CONTENT */}
