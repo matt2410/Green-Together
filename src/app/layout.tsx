@@ -27,12 +27,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <nav className="flex items-center gap-6 text-gray-700 font-medium">
               <NavItem href="/" label="Trang chủ" />
               <NavItem href="/map" label="Bản đồ" />
-              {/* <NavItem href="/goals" label="Goals" /> */}
-              {/* <NavItem href="/timeline" label="Timeline" /> */}
               <NavItem href="/events" label="Sự kiện" />
               <NavItem href="/campaigns" label="Chiến dịch" />
-              {/* <NavItem href="/team" label="Team" />
-              <NavItem href="/impact" label="Impact" /> */}
+              <NavItem href="/community" label="Góp ý" />
             </nav>
 
             {/* RIGHT */}

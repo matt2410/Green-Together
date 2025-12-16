@@ -60,7 +60,9 @@ export default function Home() {
                         <h4 className="font-semibold">📚 Kho nội dung truyền thông</h4>
                         <p className="text-gray-600 text-sm">Bài viết, infographic, video, câu chuyện truyền cảm hứng, và chiến dịch đã/đang triển khai.</p>
                     </div>
-                    <div className="card p-4 space-y-3">
+                    <div className="card p-4 space-y-3 cursor-pointer" onClick={() => {
+                        router.push(`/community`)
+                    }}>
                         <h4 className="font-semibold">💬 Góp ý & Đóng góp cộng đồng</h4>
                         <p className="text-gray-600 text-sm">Gửi đề xuất địa điểm, bình luận, chia sẻ và đánh giá các chiến dịch.</p>
                     </div>
