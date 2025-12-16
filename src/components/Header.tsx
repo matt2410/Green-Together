@@ -54,6 +54,7 @@ export default function HeaderBar() {
             <NavItem href="/events" label="Sự kiện" />
             <NavItem href="/campaigns" label="Chiến dịch" />
             <NavItem href="/community" label="Góp ý" />
+            <NavItem href="/recognitions" label="Ghi nhận" />
           </nav>
 
           {/* AUTH */}

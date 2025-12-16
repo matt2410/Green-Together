@@ -3,9 +3,12 @@
 import { UserModel } from "@/data/users"
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 export default function User() {
-    const { data: session, status } = useSession()
+    const { data: session, status, update } = useSession()
+    const router = useRouter()
 
     const user = session?.user as UserModel
 
@@ -21,7 +24,15 @@ export default function User() {
     const [saved, setSaved] = useState(false)
 
     useEffect(() => {
-        if (user) setFormData(user)
+        if (!user) return
+
+        setFormData({
+            name: user.name ?? "",
+            email: user.email ?? "",
+            phone: user.phone ?? "",
+            gender: user.gender ?? "",
+            dob: user.dob ?? "",
+        })
     }, [user])
 
     const validate = () => {
@@ -61,12 +72,17 @@ export default function User() {
 
         if (!res.ok) {
             const err = await res.json()
-            alert(err.message)
+            toast.error(err.message)
             return
         }
 
+        // 🔥 refresh JWT + session
+        await update()
         setSaved(true)
-        setTimeout(() => setSaved(false), 2000)
+
+        setTimeout(() => {
+            router.replace("/")
+        }, 800)
     }
 
     if (status === "loading") return null

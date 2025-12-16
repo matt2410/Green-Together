@@ -94,7 +94,7 @@ export default function Home() {
             {
               title: "🏅 Ghi nhận & lan tỏa",
               desc: "Huy hiệu, bảng xếp hạng và chứng nhận cho tình nguyện viên tích cực.",
-              link: ""
+              link: "/recognitions"
             }
           ].map((item, idx) => (
             <div

@@ -1,60 +1,54 @@
 export default function Footer() {
   return (
-    <footer className="mt-20 border-t bg-white">
-      <div className="container mx-auto px-6 py-10 grid gap-8 md:grid-cols-3">
-        
-        {/* BRAND */}
-        <div>
-          <h3 className="text-lg font-bold text-green-700">
-            GreenTogether 🌱
-          </h3>
-          <p className="text-sm text-gray-600 mt-2 leading-relaxed">
-            Nền tảng kết nối cộng đồng cùng chung tay bảo vệ môi trường,
-            lan tỏa lối sống xanh và phát triển bền vững tại Việt Nam.
-          </p>
-        </div>
+    <footer className="mt-16 border-t bg-white">
+      <div className="mx-auto max-w-[1200px] px-6 py-12">
+        {/* GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 
-        {/* LINKS */}
-        <div>
-          <h4 className="font-semibold mb-3">Liên kết</h4>
-          <ul className="space-y-2 text-sm text-gray-600">
-            <li>
-              <a href="/map" className="hover:text-green-600">
-                Bản đồ hành động
-              </a>
-            </li>
-            <li>
-              <a href="/events" className="hover:text-green-600">
-                Hoạt động & Sự kiện
-              </a>
-            </li>
-            <li>
-              <a href="/campaigns" className="hover:text-green-600">
-                Chiến dịch môi trường
-              </a>
-            </li>
-            <li>
-              <a href="/community" className="hover:text-green-600">
-                Góp ý cộng đồng
-              </a>
-            </li>
-          </ul>
-        </div>
+          {/* BRAND */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold text-green-700">
+              🌱 GreenTogether
+            </h3>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Nền tảng kết nối cộng đồng cùng hành động vì môi trường,
+              lan tỏa lối sống xanh và phát triển bền vững tại Việt Nam.
+            </p>
+          </div>
 
-        {/* INFO */}
-        <div>
-          <h4 className="font-semibold mb-3">Thông tin</h4>
-          <ul className="space-y-2 text-sm text-gray-600">
-            <li>📍 Phạm vi: Toàn Việt Nam</li>
-            <li>🌍 Lĩnh vực: Môi trường & Cộng đồng</li>
-            <li>👨‍💻 Phát triển bởi: <span className="font-medium">matt2410</span></li>
-          </ul>
-        </div>
-      </div>
+          {/* NAV */}
+          <div>
+            <h4 className="font-semibold mb-3">Khám phá</h4>
+            <ul className="space-y-2 text-sm text-gray-600">
+              <li><a href="/" className="hover:text-green-600">Trang chủ</a></li>
+              <li><a href="/map" className="hover:text-green-600">Bản đồ môi trường</a></li>
+              <li><a href="/events" className="hover:text-green-600">Sự kiện</a></li>
+              <li><a href="/campaigns" className="hover:text-green-600">Chiến dịch</a></li>
+            </ul>
+          </div>
 
-      {/* COPYRIGHT */}
-      <div className="border-t text-center py-4 text-sm text-gray-500">
-        © {new Date().getFullYear()} GreenTogether. All rights reserved.
+          {/* COMMUNITY */}
+          <div>
+            <h4 className="font-semibold mb-3">Cộng đồng</h4>
+            <ul className="space-y-2 text-sm text-gray-600">
+              <li><a href="/community" className="hover:text-green-600">Góp ý & Đóng góp</a></li>
+              <li><a href="/recognitions" className="hover:text-green-600">Ghi nhận & Lan tỏa</a></li>
+              <li><a href="/events" className="hover:text-green-600">Tham gia hoạt động</a></li>
+            </ul>
+          </div>
+
+          {/* AUTHOR */}
+          <div>
+            <h4 className="font-semibold mb-3">Phát triển bởi</h4>
+            <p className="text-sm text-gray-600">
+              👨‍💻 matt2410
+            </p>
+            <p className="text-xs text-gray-500 mt-2">
+              © {new Date().getFullYear()} GreenTogether.<br />
+              All rights reserved.
+            </p>
+          </div>
+        </div>
       </div>
     </footer>
   )

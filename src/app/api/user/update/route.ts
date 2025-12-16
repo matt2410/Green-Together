@@ -15,10 +15,8 @@ export async function POST(req: Request) {
       )
     }
 
-    const body = await req.json()
-    const { name, phone, gender, dob } = body
+    const { name, phone, gender, dob } = await req.json()
 
-    // Validate backend
     if (!name || !phone || !gender || !dob) {
       return NextResponse.json(
         { message: "Thiếu thông tin bắt buộc" },
@@ -45,6 +43,13 @@ export async function POST(req: Request) {
           dob,
           image: session.user.image,
         },
+        $setOnInsert: {
+          totalPoints: 0,
+          totalActivities: 0,
+          badges: [],
+          level: "newbie",
+          joinedEvents: [],
+        },
       },
       {
         upsert: true,
@@ -53,7 +58,7 @@ export async function POST(req: Request) {
     )
 
     return NextResponse.json({ success: true })
-  } catch (err: any) {
+  } catch (err) {
     console.error("[UPDATE USER ERROR]", err)
     return NextResponse.json(
       { message: "Internal Server Error" },

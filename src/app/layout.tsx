@@ -3,6 +3,7 @@ import type { ReactNode } from "react"
 import SessionWrapper from "@/components/SessionWrapper"
 import Footer from "@/components/Footer"
 import HeaderBar from "@/components/Header"
+import { Toaster } from "sonner"
 
 export default function RootLayout({
   children,
@@ -20,6 +21,7 @@ export default function RootLayout({
             <div className="w-full max-w-[1200px] px-6 py-8 space-y-8">
               {children}
             </div>
+            <Toaster position="top-right" />
           </main>
 
           <Footer />
